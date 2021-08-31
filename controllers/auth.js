@@ -6,19 +6,25 @@ const sendEmail = require('../utils/sendEmail')
 // @desc Registers User
 exports.register = async (req, res, next) => {
     const {
+        firstName,
+        lastName,
         username,
         email,
-        password
+        password,
+        role
     } = req.body;
     try {
         const user = await User.create({
+            firstName,
+            lastName,
             username,
             email,
-            password
+            password,
+            role
         });
         sendToken(user, 201, res)
     } catch (error) {
-        next(err);
+        next(error);
     }
 };
 
@@ -43,8 +49,8 @@ exports.login = async (req, res, next) => {
         };
 
         sendToken(user, 200, res)
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
     };
 };
 
@@ -85,8 +91,8 @@ exports.forgotPassword = async (req, res, next) => {
             });
 
             res.status(200).json({ success: true, data: "Email Sent" });
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error);
 
             user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
@@ -100,11 +106,7 @@ exports.forgotPassword = async (req, res, next) => {
     }
 };
 
-exports.resetPassword = (req, res, next) => {
-    res.send("Reset Password Route")
-};
-
-// @desc    Reset User Password
+// @desc    Reset user Password
 exports.resetPassword = async (req, res, next) => {
     // Compare token in URL params to hashed token
     const resetPasswordToken = crypto
@@ -133,8 +135,8 @@ exports.resetPassword = async (req, res, next) => {
             data: "Password Updated Success",
             token: user.getSignedToken(),
         });
-    } catch (err) {
-        next(err);
+    } catch (error) {
+        next(error);
     }
 };
 

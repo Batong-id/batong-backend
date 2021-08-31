@@ -1,3 +1,5 @@
+
+const User = require("../models/User");
 exports.getPrivateRoute = (req, res, next) => {
     res
         .status(200)
@@ -6,3 +8,4 @@ exports.getPrivateRoute = (req, res, next) => {
             data: "You got access to the private data in this route",
         });
 };
+
