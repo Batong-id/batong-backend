@@ -3,8 +3,15 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 
-
 const UserSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: [true, "Please provide your firstname"]
+    },
+    lastName: {
+        type: String,
+        required: [true, "Please provide your lastname"]
+    },
     username: {
         type: String,
         required: [true, "Please provide a username"]
@@ -23,6 +30,45 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Please add a password"],
         minlength: 6,
         select: false,
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin', 'seller'],
+        default: 'user'
+    },
+    address: {
+        type: String,
+        required: false,
+    },
+    pic: {
+        type: String,
+        required: true,
+        default:
+            "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
+    phoneNumber: {
+        type: Number,
+        minlength: 11,
+        required: false,
+
+    },
+    accountNumber: {
+        type: Number,
+        required: false
+    },
+    gender: {
+        type: String,
+        enum: ['male', 'female', 'undefined'],
+        default: "undefined",
+        required: false,
+    },
+
+    updated: {
+        type: Date
+    },
+    created: {
+        type: Date,
+        default: Date.now
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -57,6 +103,10 @@ UserSchema.methods.getResetPasswordToken = function () {
     this.resetPasswordExpire = Date.now() + 10 * (60 * 1000);
 
     return resetToken;
+}
+
+UserSchema.methods.getProfilById = function (id) {
+
 }
 
 
