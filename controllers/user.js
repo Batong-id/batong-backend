@@ -33,7 +33,7 @@ exports.updateUser = async (req, res, next) => {
             accountNumber: updatedUser.accountNumber,
             gender: updatedUser.gender
         });
-        // const user = User.findById(req.user.id)
+
     } else {
         res.status(404);
         throw new Error("User Not Found");

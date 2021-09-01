@@ -36,21 +36,11 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'seller'],
         default: 'user'
     },
-    address: {
-        type: String,
-        required: false,
-    },
     pic: {
         type: String,
         required: true,
         default:
             "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-    },
-    phoneNumber: {
-        type: Number,
-        minlength: 11,
-        required: false,
-
     },
     accountNumber: {
         type: Number,
@@ -62,7 +52,6 @@ const UserSchema = new mongoose.Schema({
         default: "undefined",
         required: false,
     },
-
     updated: {
         type: Date
     },
@@ -92,6 +81,9 @@ UserSchema.methods.getSignedToken = function () {
         expiresIn: process.env.JWT_EXPIRE,
     })
 }
+userSchema.virtual("fullName").get(function () {
+    return `${this.firstName} ${this.lastName}`;
+});
 
 UserSchema.methods.getResetPasswordToken = function () {
     const resetToken = crypto.randomBytes(20).toString("hex");
@@ -104,11 +96,6 @@ UserSchema.methods.getResetPasswordToken = function () {
 
     return resetToken;
 }
-
-UserSchema.methods.getProfilById = function (id) {
-
-}
-
 
 
 const User = mongoose.model("User", UserSchema);
