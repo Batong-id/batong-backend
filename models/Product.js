@@ -5,6 +5,11 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide name for your product"]
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     status: {

@@ -81,7 +81,7 @@ UserSchema.methods.getSignedToken = function () {
         expiresIn: process.env.JWT_EXPIRE,
     })
 }
-userSchema.virtual("fullName").get(function () {
+UserSchema.virtual("fullName").get(function () {
     return `${this.firstName} ${this.lastName}`;
 });
 

@@ -1,13 +1,15 @@
 const Product = require("../models/Product");
 const Category = require("../models/Category");
+const slugify = require("slugify")
+const shortid = require("shortid");
 
 exports.createProduct = (req, res) => {
     //res.status(200).json( { file: req.files, body: req.body } );
 
-    const { name, price, description, category, quantity, createdBy } = req.body;
+    const { name, price, desc, category, quantity, createdBy, status } = req.body;
     let productPictures = [];
 
-    if (req.files.length > 0) {
+    if (req.file > 0) {
         productPictures = req.files.map((file) => {
             return { img: file.location };
         });
@@ -18,9 +20,10 @@ exports.createProduct = (req, res) => {
         slug: slugify(name),
         price,
         quantity,
-        description,
+        desc,
         productPictures,
         category,
+        status,
         createdBy: req.user._id,
     });
 
@@ -52,25 +55,25 @@ exports.getProductsBySlug = (req, res) => {
                             res.status(200).json({
                                 products,
                                 priceRange: {
-                                    under5k: 5000,
-                                    under10k: 10000,
-                                    under15k: 15000,
-                                    under20k: 20000,
-                                    under30k: 30000,
+                                    under50k: 50000,
+                                    under100k: 100000,
+                                    under200k: 200000,
+                                    under300k: 300000,
+                                    under500k: 500000,
                                 },
                                 productsByPrice: {
-                                    under5k: products.filter((product) => product.price <= 5000),
-                                    under10k: products.filter(
-                                        (product) => product.price > 5000 && product.price <= 10000
+                                    under50k: products.filter((product) => product.price <= 50000),
+                                    under100k: products.filter(
+                                        (product) => product.price > 50000 && product.price <= 100000
                                     ),
-                                    under15k: products.filter(
-                                        (product) => product.price > 10000 && product.price <= 15000
+                                    under200k: products.filter(
+                                        (product) => product.price > 100000 && product.price <= 200000
                                     ),
-                                    under20k: products.filter(
-                                        (product) => product.price > 15000 && product.price <= 20000
+                                    under300k: products.filter(
+                                        (product) => product.price > 200000 && product.price <= 300000
                                     ),
-                                    under30k: products.filter(
-                                        (product) => product.price > 20000 && product.price <= 30000
+                                    under500k: products.filter(
+                                        (product) => product.price > 300000 && product.price <= 500000
                                     ),
                                 },
                             });
