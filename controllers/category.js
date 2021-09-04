@@ -26,12 +26,13 @@ function createCategories(categories, parentId = null) {
 }
 
 exports.addCategory = (req, res) => {
+    console.log("Create Category")
+    const { name, type } = req.body;
     const categoryObj = {
-        name: req.body.name,
+        name,
         slug: `${slugify(req.body.name)}-${shortid.generate()}`,
         createdBy: req.user._id,
-        type: req.body.type,
-
+        type
     };
 
     if (req.file) {
@@ -42,8 +43,8 @@ exports.addCategory = (req, res) => {
         categoryObj.parentId = req.body.parentId;
     }
 
-    const cat = new Category(categoryObj);
-    cat.save((error, category) => {
+    const category = new Category(categoryObj);
+    category.save((error, category) => {
         if (error) return res.status(400).json({ error });
         if (category) {
             return res.status(201).json({ category });
@@ -51,14 +52,16 @@ exports.addCategory = (req, res) => {
     });
 };
 
-exports.getCategories = (req, res) => {
-    Category.find({}).exec((error, categories) => {
-        if (error) return res.status(400).json({ error });
-        if (categories) {
-            const categoryList = createCategories(categories);
-            res.status(200).json({ categoryList });
-        }
-    });
+exports.getCategories = async (req, res) => {
+    const category = await Category.find({})
+        .select("_id name slug type categoryImage parentId createdBy")
+        .exec();
+
+    if (category) res.status(200).json({ category });
+    res.status(400).json({ error });
+
+
+
 };
 
 exports.updateCategories = async (req, res) => {

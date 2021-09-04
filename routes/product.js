@@ -8,6 +8,7 @@ const {
     getProducts,
     getProductDetailsById,
     getProductsBySlug,
+    getProductsByCategory,
     deleteProductById
 } = require('../controllers/product')
 const {
@@ -18,11 +19,14 @@ const {
     adminMiddleware
 } = require('../middleware/auth')
 
-router.route("/create").post(protect, sellerMiddleware, upload.array("productPicture"), createProduct)
-router.route("/products/:slug").get(getProductsBySlug);
-router.route("/:productId").get(getProductDetailsById);
-router.route("/deleteProductById").delete(protect, adminMiddleware, deleteProductById);
-router.route("/").get(protect, adminMiddleware, getProducts);
+router.route("/create").post(protect, createProduct)
+router.route("/slug/:slug").get(getProductsBySlug);
+router.route("/category/:categoryParams").get(getProductsByCategory);
+router.route("/id/:productId").get(getProductDetailsById);
+router.route("/").get(protect, getProducts);
+// router.route("/deleteProductById").delete(protect, adminMiddleware, deleteProductById);
+
+
 
 
 module.exports = router
