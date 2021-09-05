@@ -1,6 +1,6 @@
 const Product = require("../models/Product");
 const Category = require("../models/Category");
-const slugify = require("slugify")
+const slugify = require("slugify");
 const shortid = require("shortid");
 const ErrorResponse = require("../utils/errorResponse");
 
