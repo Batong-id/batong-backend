@@ -15,8 +15,6 @@ exports.createStore = async (req, res) => {
     const products = await Product.find({ createdBy: req.user._id })
         .exec();
 
-
-
     if (products) {
         storeObj.products = products
     }
@@ -42,7 +40,7 @@ exports.getAllStore = async (req, res) => {
         .exec();
 
     if (store) res.status(200).json({ store });
-    return next(new ErrorResponse("user denied"))
+    return new ErrorResponse("store empty", 403)
 }
 
 exports.getOwnStore = async (req, res) => {
@@ -50,4 +48,37 @@ exports.getOwnStore = async (req, res) => {
         .select("_id storeName slug desc products owner storeImage")
         .populate({ path: "products", select: "_id name price quantity slug description productPictures category" })
         .exec();
+
+    if (store) res.status(200).json({ store });
+    return new ErrorResponse("store not found", 404)
+}
+
+exports.getStoreBySlug = async (req, res) => {
+    const slug = req.params.slug;
+    const store = await Store.find({ slug: slug })
+        .select("_id storeName slug desc products owner storeImage")
+        .populate({ path: "products", select: "_id name price quantity slug description productPictures category" })
+        .exec();
+
+    if (store) res.status(200).json({ store });
+    return new ErrorResponse("store not found", 404)
+}
+
+exports.updateStore = async (req, res) => {
+    const storeId = req.params.storeId
+    const store = await Store.findById({ _id: storeId })
+    const { storeName, desc } = req.body;
+
+    if (store) {
+        store.storeName = storeName || store.storeName;
+        store.desc = desc || store.desc;
+        store.slug = `${slugify(storeName)}-${shortid.generate()}` || store.slug;
+
+        const updatedStore = store.save()
+
+        return res.json({ store })
+    }
+    return new ErrorResponse("something wrong, store can't be updated", 400)
+
+
 }
