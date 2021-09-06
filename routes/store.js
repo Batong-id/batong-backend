@@ -9,7 +9,8 @@ const {
     getAllStore,
     getOwnStore,
     getStoreBySlug,
-    updateStore
+    updateStore,
+    deleteStore
 } = require("../controllers/store");
 const {
     upload,
@@ -24,6 +25,6 @@ router.route("/").get(protect, getAllStore);
 router.route("/mystore").get(protect, getOwnStore);
 router.route("/update/:storeId").put(protect, updateStore);
 router.route("/slug/:slug").get(protect, getStoreBySlug);
-router.route("/slug/:slug").put(protect, getStoreBySlug);
+router.route("/delete/:storeId").delete(protect, deleteStore);
 module.exports = router;
 
