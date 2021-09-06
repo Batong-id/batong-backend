@@ -71,15 +71,14 @@ exports.updateStore = async (req, res, next) => {
     if (store) {
         store.storeName = storeName || store.storeName;
         store.desc = desc || store.desc;
-        store.slug = `${slugify(storeName)}-${shortid.generate()}` || store.slug;
-
-        const updatedStore = store.save()
+        if (storeName) {
+            store.slug = `${slugify(storeName)}-${shortid.generate()}` || store.slug;
+        }
+        const updatedStore = await store.save()
 
         return res.json({ store })
     }
     return next(new ErrorResponse("something wrong, store can't be updated", 400))
-
-
 }
 
 exports.deleteStore = async (req, res, next) => {
