@@ -9,16 +9,29 @@ const StoreSchema = new mongoose.Schema({
         type: String,
         require: false
     },
-    products: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+    products: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+            required: true,
+        }
+    ],
+    storeImage: {
+        type: String,
         required: true,
+        default:
+            "https://resource.permatamall.com/api/v1/belanja/product/default-product-image.png",
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-    }
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+    },
 })
 
 const Store = mongoose.model("Store", StoreSchema);

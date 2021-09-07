@@ -58,7 +58,8 @@ exports.getCategories = async (req, res) => {
         .exec();
 
     if (category) res.status(200).json({ category });
-    res.status(400).json({ error });
+    return next(new ErrorResponse("user denied"))
+
 
 
 

@@ -9,7 +9,8 @@ const {
     getProductDetailsById,
     getProductsBySlug,
     getProductsByCategory,
-    deleteProductById
+    deleteProductById,
+    updateProductById
 } = require('../controllers/product')
 const {
     upload,
@@ -24,7 +25,8 @@ router.route("/slug/:slug").get(getProductsBySlug);
 router.route("/category/:categoryParams").get(getProductsByCategory);
 router.route("/id/:productId").get(getProductDetailsById);
 router.route("/").get(protect, getProducts);
-// router.route("/deleteProductById").delete(protect, adminMiddleware, deleteProductById);
+router.route("/delete/:productId").delete(protect, deleteProductById);
+router.route("/update/:productId").put(protect, updateProductById)
 
 
 
