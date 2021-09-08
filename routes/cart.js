@@ -7,9 +7,11 @@ const {
     sellerMiddleware,
     adminMiddleware
 } = require('../middleware/auth')
-const { addItemToCart } = require('../controllers/cart')
+const { addItemToCart, getCartItems, removeCartItems } = require('../controllers/cart')
 
 router.route('/addToCart').post(protect, addItemToCart);
+router.route('/').get(protect, getCartItems)
+router.route('/deleteItem/:productId').delete(protect, removeCartItems)
 
 
 module.exports = router
