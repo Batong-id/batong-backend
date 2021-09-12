@@ -14,17 +14,10 @@ const addressSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    pinCode: {
+    postCode: {
         type: String,
         required: true,
         trim: true,
-    },
-    locality: {
-        type: String,
-        required: true,
-        trim: true,
-        min: 10,
-        max: 100,
     },
     address: {
         type: String,
@@ -38,7 +31,7 @@ const addressSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    state: {
+    province: {
         type: String,
         required: true,
         required: true,

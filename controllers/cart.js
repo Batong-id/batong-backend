@@ -82,7 +82,6 @@ exports.getCartItems = (req, res) => {
                 res.status(200).json({ cartItems });
             }
         });
-    //}
 };
 
 exports.removeCartItems = (req, res) => {
