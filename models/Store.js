@@ -15,6 +15,18 @@ const StoreSchema = new mongoose.Schema({
             ref: "Product",
         }
     ],
+    gallery: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Gallery",
+        }
+    ],
+    client: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Client",
+        }
+    ],
     storeImage: {
         type: String,
         required: true,
