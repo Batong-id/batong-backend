@@ -8,32 +8,19 @@ const ErrorResponse = require("../utils/errorResponse");
 exports.createProduct = async (req, res, next) => {
     //res.status(200).json( { file: req.files, body: req.body } );
 
-    let pictures = [];
+    let productPictures = [];
     const { name, price, desc, category, quantity, status, } = req.body;
 
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
 
 
-    if (req.file > 0) {
-        pictures = req.files.map((file) => {
-            return { img: file.location };
+    if (req.files.length > 0) {
+
+        productPictures = req.files.map((file) => {
+            return { img: file.path };
         });
     }
     const store = await Store.findOne({ owner: req.user._id });
-    // if (store) {
-    //     store.products.push(productObj)
-    //     store.save()
-    // }
-
-    // .exec((error, store) => {
-    //     if (error) return res.status(400).json({ error });
-    //     if (store) {
-    //         store.products.push(productObj)
-    //         return store
-
-    //     }
-    // });
-
 
     const productObj = {
         name,
@@ -45,7 +32,7 @@ exports.createProduct = async (req, res, next) => {
         category: categoryId,
         quantity,
         status,
-        productPictures: pictures,
+        productPictures,
     };
 
 

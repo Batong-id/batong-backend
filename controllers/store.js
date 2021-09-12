@@ -21,7 +21,7 @@ exports.createStore = async (req, res, next) => {
     }
 
     if (req.file) {
-        storeObj.storeImage = req.file.filename;
+        storeObj.storeImage = req.file.path;
     }
 
     console.log(storeObj)
