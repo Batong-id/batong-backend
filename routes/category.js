@@ -11,12 +11,12 @@ const {
     deleteCategories,
 } = require("../controllers/category");
 const {
-    upload,
     protect,
     userMiddleware,
     sellerMiddleware,
     adminMiddleware
 } = require('../middleware/auth')
+const { upload } = require('../middleware/upload')
 
 router.route("/create").post(protect, adminMiddleware, upload.single("categoryImage"), addCategory);
 router.route("/").get(getCategories);

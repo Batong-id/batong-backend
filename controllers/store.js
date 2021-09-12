@@ -4,6 +4,7 @@ const ErrorResponse = require("../utils/errorResponse");
 const Store = require('../models/Store')
 const Product = require('../models/Product')
 
+
 exports.createStore = async (req, res, next) => {
     const { storeName, desc } = req.body;
     const storeObj = {
@@ -12,7 +13,7 @@ exports.createStore = async (req, res, next) => {
         slug: `${slugify(storeName)}-${shortid.generate()}`,
         owner: req.user._id,
     }
-    const products = await Product.find({ createdBy: req.user._id })
+    const products = await Product.find({ 'store.owner': req.user._id })
         .exec();
 
     if (products) {
@@ -20,7 +21,7 @@ exports.createStore = async (req, res, next) => {
     }
 
     if (req.file) {
-        storeObj.storeImage = "/public/" + req.file.filename;
+        storeObj.storeImage = req.file.filename;
     }
 
     console.log(storeObj)
@@ -73,6 +74,9 @@ exports.updateStore = async (req, res, next) => {
         store.desc = desc || store.desc;
         if (storeName) {
             store.slug = `${slugify(storeName)}-${shortid.generate()}` || store.slug;
+        }
+        if (req.file) {
+            storeObj.storeImage = "/public/" + req.file.path;
         }
         const updatedStore = await store.save()
 

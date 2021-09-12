@@ -12,6 +12,7 @@ const ProductSchema = new mongoose.Schema({
     },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    store: { type: mongoose.Schema.Types.ObjectId, ref: "Store", required: true },
     status: {
         type: String,
         enum: ['Ready Stock', 'Pre-Order'],

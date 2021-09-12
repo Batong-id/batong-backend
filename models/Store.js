@@ -13,7 +13,6 @@ const StoreSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product",
-            required: true,
         }
     ],
     storeImage: {
@@ -32,6 +31,7 @@ const StoreSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+
 })
 
 const Store = mongoose.model("Store", StoreSchema);

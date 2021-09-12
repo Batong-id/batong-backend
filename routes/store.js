@@ -13,17 +13,17 @@ const {
     deleteStore
 } = require("../controllers/store");
 const {
-    upload,
     protect,
     userMiddleware,
     sellerMiddleware,
     adminMiddleware
 } = require('../middleware/auth')
+const { upload } = require('../middleware/upload')
 
-router.route("/create").post(protect, adminMiddleware, upload.single("categoryImage"), createStore);
+router.route("/create").post(protect, adminMiddleware, upload.single("storeImage"), createStore);
 router.route("/").get(protect, getAllStore);
 router.route("/mystore").get(protect, getOwnStore);
-router.route("/update/:storeId").put(protect, updateStore);
+router.route("/update/:storeId").put(protect, upload.single("storeImage"), updateStore);
 router.route("/slug/:slug").get(protect, getStoreBySlug);
 router.route("/delete/:storeId").delete(protect, deleteStore);
 module.exports = router;

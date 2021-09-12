@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Store = require("../models/Store");
 const Category = require("../models/Category");
 const slugify = require("slugify");
 const shortid = require("shortid");
@@ -12,16 +13,34 @@ exports.createProduct = async (req, res, next) => {
 
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
 
+
     if (req.file > 0) {
         pictures = req.files.map((file) => {
             return { img: file.location };
         });
     }
+    const store = await Store.findOne({ owner: req.user._id });
+    // if (store) {
+    //     store.products.push(productObj)
+    //     store.save()
+    // }
+
+    // .exec((error, store) => {
+    //     if (error) return res.status(400).json({ error });
+    //     if (store) {
+    //         store.products.push(productObj)
+    //         return store
+
+    //     }
+    // });
+
+
     const productObj = {
         name,
         slug: `${slugify(req.body.name)}-${shortid.generate()}`,
         createdBy: req.user._id,
         price,
+        store: store,
         desc,
         category: categoryId,
         quantity,
@@ -29,10 +48,14 @@ exports.createProduct = async (req, res, next) => {
         productPictures: pictures,
     };
 
+
     const product = new Product(productObj);
     product.save((error, product) => {
         if (error) return res.status(400).json({ error });
         if (product) {
+            store.products.push(product)
+            store.save()
+
             return res.status(201).json({ product });
         }
     });
@@ -149,7 +172,7 @@ exports.updateProductById = async (req, res, next) => {
 
 
         const updatedProduct = await product.save()
-        return res.json({ product })
+        return res.json({ updatedProduct })
     }
     return next(new ErrorResponse("something wrong, product can't be updated", 400))
 

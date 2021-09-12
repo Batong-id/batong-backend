@@ -13,12 +13,12 @@ const {
     updateProductById
 } = require('../controllers/product')
 const {
-    upload,
     protect,
     userMiddleware,
     sellerMiddleware,
     adminMiddleware
 } = require('../middleware/auth')
+const { upload } = require('../middleware/upload')
 
 router.route("/create").post(protect, createProduct)
 router.route("/slug/:slug").get(getProductsBySlug);
