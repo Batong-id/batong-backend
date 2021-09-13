@@ -14,26 +14,31 @@ exports.addClient = async (req, res, next) => {
         });
     }
     const store = await Store.findOne({ owner: req.user._id });
-    const clientObj = {
-        clientName,
-        slug: `${slugify(req.body.clientName)}-${shortid.generate()}`,
-        orderName,
-        quantity,
-        price,
-        totalPrice,
-        clientPictures,
-        store: store,
+    if (store) {
+        const clientObj = {
+            clientName,
+            slug: `${slugify(req.body.clientName)}-${shortid.generate()}`,
+            orderName,
+            quantity,
+            price,
+            totalPrice,
+            clientPictures,
+            store: store,
+        }
+
+        const client = new Client(clientObj);
+        client.save((error, client) => {
+            if (error) return res.status(400).json({ error });
+            if (client) {
+                store.clients.push(client._id)
+                store.save()
+                return res.status(201).json({ client });
+            }
+        })
+    } else {
+        return next(new ErrorResponse("store not found", 404));
     }
 
-    const client = new CLien(clientObj);
-    client.save((error, client) => {
-        if (error) return res.status(400).json({ error });
-        if (client) {
-            store.clients.push(client)
-            store.save()
-            return res.status(201).json({ client });
-        }
-    })
 
 }
 

@@ -20,32 +20,34 @@ exports.createProduct = async (req, res, next) => {
             return { img: file.path };
         });
     }
-    const store = await Store.findOne({ owner: req.user._id });
+    const store = await Store.findOne({ owner: req.user._id }).exec();
+    if (store) {
+        console.log("Store Found")
+        const productObj = {
+            name,
+            slug: `${slugify(req.body.name)}-${shortid.generate()}`,
+            createdBy: req.user._id,
+            price,
+            store: store,
+            desc,
+            category: categoryId,
+            quantity,
+            status,
+            productPictures,
+        };
+        const product = new Product(productObj);
+        product.save((error, product) => {
+            if (error) return res.status(400).json({ error });
+            if (product) {
+                store.products.push(product._id)
+                store.save()
+                return res.status(201).json({ product });
+            }
+        });
+    } else {
+        return next(new ErrorResponse("store not found", 404));
+    }
 
-    const productObj = {
-        name,
-        slug: `${slugify(req.body.name)}-${shortid.generate()}`,
-        createdBy: req.user._id,
-        price,
-        store: store,
-        desc,
-        category: categoryId,
-        quantity,
-        status,
-        productPictures,
-    };
-
-
-    const product = new Product(productObj);
-    product.save((error, product) => {
-        if (error) return res.status(400).json({ error });
-        if (product) {
-            store.products.push(product)
-            store.save()
-
-            return res.status(201).json({ product });
-        }
-    });
 };
 
 exports.getProductsBySlug = (req, res, next) => {

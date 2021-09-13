@@ -36,12 +36,17 @@ exports.createStore = async (req, res, next) => {
 
 exports.getAllStore = async (req, res, next) => {
     const store = await Store.find({})
-        .select("_id storeName slug desc products owner storeImage")
+        .select("_id storeName slug desc gallery clients products owner storeImage ")
         .populate({ path: "products", select: "_id name price quantity slug description productPictures category" })
         .exec();
 
-    if (store) res.status(200).json({ store });
-    return next(new ErrorResponse("store empty", 403))
+    if (store) {
+        res.status(200).json({ store })
+    }
+    else {
+        return next(new ErrorResponse("store empty", 403))
+    }
+
 }
 
 exports.getOwnStore = async (req, res, next) => {
@@ -50,8 +55,14 @@ exports.getOwnStore = async (req, res, next) => {
         .populate({ path: "products", select: "_id name price quantity slug description productPictures category" })
         .exec();
 
-    if (store) res.status(200).json({ store });
-    return next(new ErrorResponse("store not found", 404))
+    if (store) {
+        console.log('Store Found')
+        res.status(200).json({ store })
+    }
+    else {
+        return next(new ErrorResponse("store not found", 404))
+    }
+
 }
 
 exports.getStoreBySlug = async (req, res, next) => {

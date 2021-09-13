@@ -18,7 +18,16 @@ const GallerySchema = new mongoose.Schema({
                     "https://resource.permatamall.com/api/v1/belanja/product/default-product-image.png",
             }
         }
-    ]
+    ],
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Store",
+    }
 });
 
 const Gallery = mongoose.model("Gallery", GallerySchema);

@@ -16,9 +16,9 @@ const {
     sellerMiddleware,
     adminMiddleware
 } = require('../middleware/auth')
-const { upload } = require('../middleware/upload')
+const { uploadClient } = require('../middleware/upload')
 
-router.route("/add").post(protect, addClient);
+router.route("/add").post(protect, uploadClient.array("clientPictures"), addClient)
 router.route("/").get(getClient);
 router.route("/update/:clientId").post(protect, updateClient);
 router.route("/delete/:clientId").post(protect, deleteClient);
