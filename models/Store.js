@@ -21,7 +21,7 @@ const StoreSchema = new mongoose.Schema({
             ref: "Gallery",
         }
     ],
-    client: [
+    clients: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Client",

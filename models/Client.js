@@ -5,6 +5,11 @@ const ClientSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     orderName: {
         type: String,
         required: true
@@ -21,7 +26,7 @@ const ClientSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    pictures: [
+    clientPictures: [
         {
             img: {
                 type: String,
@@ -30,7 +35,11 @@ const ClientSchema = new mongoose.Schema({
                     "https://resource.permatamall.com/api/v1/belanja/product/default-product-image.png",
             }
         }
-    ]
+    ],
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Store",
+    }
 });
 
 const Client = mongoose.model("Client", ClientSchema);
