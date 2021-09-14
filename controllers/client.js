@@ -43,13 +43,22 @@ exports.addClient = async (req, res, next) => {
 }
 
 exports.getClient = async (req, res, next) => {
-    const clients = await Client.find({})
+    const store = await Store.findOne({ owner: req.user._id });
+
+    const clients = await Client.find({ store: store })
         .select("_id clientName orderName slug quantity price totalPrice clientsPictures store")
         .populate({ path: "store", select: "_id storeName desc owner" })
         .exec();
     if (clients) return res.status(200).json({ clients });
     return next(new ErrorResponse("client couldn't be found", 400))
 }
+
+// exports.getAllClientPict = async (req, res, next) => {
+//     const clients = await Client.find({ store: store })
+//         .select("clientsPictures")
+//         .populate({ path: "store", select: "_id storeName desc owner" })
+//         .exec();
+// }
 
 exports.updateClient = async (req, res, next) => {
     res.status(200).json({ body: req.body });
