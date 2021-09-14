@@ -19,7 +19,7 @@ const {
 const { uploadClient } = require('../middleware/upload')
 
 router.route("/add").post(protect, uploadClient.array("clientPictures"), addClient)
-router.route("/").get(getClient);
+router.route("/").get(protect, getClient);
 router.route("/update/:clientId").post(protect, updateClient);
 router.route("/delete/:clientId").post(protect, deleteClient);
 
