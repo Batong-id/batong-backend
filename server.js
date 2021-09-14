@@ -15,11 +15,15 @@ app.use(cors())
 app.use('/api/v1/auth', require('./routes/auth'))
 app.use('/api/v1/user', require('./routes/user'))
 app.use('/api/v1/private', require('./routes/private'))
+
 app.use('/api/v1/product', require('./routes/product'))
 app.use('/api/v1/category', require('./routes/category'))
 app.use('/api/v1/store', require('./routes/store'))
 app.use('/api/v1/cart', require('./routes/cart'))
 app.use('/api/v1/address', require('./routes/address'))
+
+app.use('/api/v1/homepage/client', require('./routes/client'))
+app.use('/api/v1/homepage/gallery', require('./routes/gallery'))
 
 //Error Handler (should be last piece of middleware)
 app.use(errorHandler)

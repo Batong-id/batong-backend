@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Store = require("../models/Store");
 const Category = require("../models/Category");
 const slugify = require("slugify");
 const shortid = require("shortid");
@@ -7,35 +8,46 @@ const ErrorResponse = require("../utils/errorResponse");
 exports.createProduct = async (req, res, next) => {
     //res.status(200).json( { file: req.files, body: req.body } );
 
-    let pictures = [];
+    let productPictures = [];
     const { name, price, desc, category, quantity, status, } = req.body;
 
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
 
-    if (req.file > 0) {
-        pictures = req.files.map((file) => {
-            return { img: file.location };
+
+    if (req.files.length > 0) {
+
+        productPictures = req.files.map((file) => {
+            return { img: file.path };
         });
     }
-    const productObj = {
-        name,
-        slug: `${slugify(req.body.name)}-${shortid.generate()}`,
-        createdBy: req.user._id,
-        price,
-        desc,
-        category: categoryId,
-        quantity,
-        status,
-        productPictures: pictures,
-    };
+    const store = await Store.findOne({ owner: req.user._id }).exec();
+    if (store) {
+        console.log("Store Found")
+        const productObj = {
+            name,
+            slug: `${slugify(req.body.name)}-${shortid.generate()}`,
+            createdBy: req.user._id,
+            price,
+            store: store,
+            desc,
+            category: categoryId,
+            quantity,
+            status,
+            productPictures,
+        };
+        const product = new Product(productObj);
+        product.save((error, product) => {
+            if (error) return res.status(400).json({ error });
+            if (product) {
+                store.products.push(product._id)
+                store.save()
+                return res.status(201).json({ product });
+            }
+        });
+    } else {
+        return next(new ErrorResponse("store not found", 404));
+    }
 
-    const product = new Product(productObj);
-    product.save((error, product) => {
-        if (error) return res.status(400).json({ error });
-        if (product) {
-            return res.status(201).json({ product });
-        }
-    });
 };
 
 exports.getProductsBySlug = (req, res, next) => {
@@ -149,7 +161,7 @@ exports.updateProductById = async (req, res, next) => {
 
 
         const updatedProduct = await product.save()
-        return res.json({ product })
+        return res.json({ updatedProduct })
     }
     return next(new ErrorResponse("something wrong, product can't be updated", 400))
 
