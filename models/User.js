@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'seller'],
         default: 'user'
     },
-    pic: {
+    pict: {
         type: String,
         required: true,
         default:
