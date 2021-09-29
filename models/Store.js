@@ -9,6 +9,10 @@ const StoreSchema = new mongoose.Schema({
         type: String,
         require: false
     },
+    address: {
+        type: String,
+        require: false
+    },
     products: [
         {
             type: mongoose.Schema.Types.ObjectId,

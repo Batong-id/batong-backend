@@ -6,10 +6,11 @@ const Product = require('../models/Product')
 
 
 exports.createStore = async (req, res, next) => {
-    const { storeName, desc } = req.body;
+    const { storeName, desc, address } = req.body;
     const storeObj = {
         storeName,
         desc,
+        address,
         slug: `${slugify(storeName)}-${shortid.generate()}`,
         owner: req.user._id,
     }
@@ -24,7 +25,6 @@ exports.createStore = async (req, res, next) => {
         storeObj.storeImage = req.file.path;
     }
 
-    console.log(storeObj)
     const store = new Store(storeObj);
     store.save((error, store) => {
         if (error) return next(new ErrorResponse(error, 400));
@@ -50,13 +50,12 @@ exports.getAllStore = async (req, res, next) => {
 }
 
 exports.getOwnStore = async (req, res, next) => {
-    const store = await Store.find({ owner: req.user._id })
-        .select("_id storeName slug desc products owner storeImage")
+    const store = await Store.findOne({ owner: req.user._id })
+        .select("_id storeName slug desc products owner storeImage address")
         .populate({ path: "products", select: "_id name price quantity slug description productPictures category" })
         .exec();
 
     if (store) {
-        console.log('Store Found')
         res.status(200).json({ store })
     }
     else {
