@@ -10,19 +10,14 @@ exports.createProduct = async (req, res, next) => {
 
     let productPictures = [];
     const { name, price, desc, category, quantity, status, } = req.body;
-
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
-
-
-    if (req.files.length > 0) {
-
+    if (req.files?.length > 0) {
         productPictures = req.files.map((file) => {
             return { img: file.path };
         });
     }
     const store = await Store.findOne({ owner: req.user._id }).exec();
     if (store) {
-        console.log("Store Found")
         const productObj = {
             name,
             slug: `${slugify(req.body.name)}-${shortid.generate()}`,
@@ -52,7 +47,6 @@ exports.createProduct = async (req, res, next) => {
 
 exports.getProductsBySlug = (req, res, next) => {
     const { slug } = req.params;
-    console.log("getProductBySlug")
     Category.findOne({ slug: slug })
         .select("_id type")
         .exec((category) => {
@@ -107,7 +101,6 @@ exports.getProducts = async (req, res, next) => {
 
 
 exports.getProductDetailsById = async (req, res, next) => {
-    console.log("Get Product By Id")
     const { productId } = req.params
     const product = await Product.find({ "_id": productId })
         .select("_id name price quantity slug description productPictures category")
@@ -119,13 +112,8 @@ exports.getProductDetailsById = async (req, res, next) => {
 };
 
 exports.getProductsByCategory = async (req, res, next) => {
-    console.log("Get Product By Category")
     const { categoryParams } = req.params;
-    console.log(categoryParams)
-
     const categoryId = await Category.findOne({ type: categoryParams }).select("_id").exec();
-    console.log(categoryId)
-
     const product = await Product.find({ category: categoryId })
         .select("_id name price quantity slug description productPictures category")
         .populate({ path: "category", select: "_id name type slug" })
@@ -137,7 +125,7 @@ exports.getProductsByCategory = async (req, res, next) => {
 exports.updateProductById = async (req, res, next) => {
     const productId = req.params.productId;
     const product = await Product.findOne({ _id: productId })
-    const { name, price, desc, category, quantity, status, } = req.body;
+    const { name, price, desc, category, quantity, status } = req.body;
 
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
 
@@ -171,10 +159,8 @@ exports.deleteProductById = async (req, res, next) => {
     const productId = req.params.productId;
     if (productId) {
         const product = await Product.findById(productId).exec()
-        console.log(product)
 
         if (product) {
-            console.log("here")
             Product.findByIdAndDelete(productId).exec()
             return res.status(202).json({ success: true, data: "product successfully deleted" })
         } return next(new ErrorResponse(`product with id ${productId} counldn't be found`, 400))

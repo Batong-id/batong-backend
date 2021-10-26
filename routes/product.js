@@ -20,13 +20,13 @@ const {
 } = require('../middleware/auth')
 const { upload } = require('../middleware/upload')
 
-router.route("/create").post(protect, upload.array("productPictures"), createProduct)
+router.route("/create").post(protect, sellerMiddleware, upload.array("productPictures"), createProduct)
 router.route("/slug/:slug").get(getProductsBySlug);
 router.route("/category/:categoryParams").get(getProductsByCategory);
 router.route("/id/:productId").get(getProductDetailsById);
 router.route("/").get(protect, getProducts);
-router.route("/delete/:productId").delete(protect, deleteProductById);
-router.route("/update/:productId").put(protect, updateProductById)
+router.route("/delete/:productId").delete(protect, sellerMiddleware, deleteProductById);
+router.route("/update/:productId").put(protect, sellerMiddleware, updateProductById)
 
 
 

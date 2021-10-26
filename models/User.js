@@ -36,13 +36,17 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'seller'],
         default: 'user'
     },
-    pic: {
+    pict: {
         type: String,
         required: true,
         default:
             "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     },
     accountNumber: {
+        type: Number,
+        required: false
+    },
+    phoneNumber: {
         type: Number,
         required: false
     },

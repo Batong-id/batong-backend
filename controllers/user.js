@@ -9,7 +9,7 @@ exports.updateUser = async (req, res, next) => {
         user.lastName = req.body.lastName || user.lastName;
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
-        user.pic = req.body.pic || user.pic;
+        user.pict = req.body.pict || user.pict;
         user.role = user.role;
         user.address = req.body.address || '';
         user.phoneNumber = req.body.phoneNumber || '';
@@ -26,7 +26,7 @@ exports.updateUser = async (req, res, next) => {
             lastName: updatedUser.lastName,
             username: updatedUser.username,
             email: updatedUser.email,
-            pic: updatedUser.pic,
+            pict: updatedUser.pict,
             role: updatedUser.role,
             address: updatedUser.address,
             phoneNumber: updatedUser.phoneNumber,
@@ -49,7 +49,7 @@ exports.getUser = async (req, res, next) => {
             lastName: user.lastName,
             username: user.username,
             email: user.email,
-            pic: user.pic,
+            pict: user.pict,
             role: user.role,
             address: user.address,
             phoneNumber: user.phoneNumber,
