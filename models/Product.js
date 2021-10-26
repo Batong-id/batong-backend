@@ -22,6 +22,7 @@ const ProductSchema = new mongoose.Schema({
         {
             img: {
                 type: String,
+                data: Buffer,
                 required: true,
                 default:
                     "https://resource.permatamall.com/api/v1/belanja/product/default-product-image.png",

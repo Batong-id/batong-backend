@@ -10,19 +10,18 @@ exports.createProduct = async (req, res, next) => {
 
     let productPictures = [];
     const { name, price, desc, category, quantity, status, } = req.body;
-
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
 
-
-    if (req.files.length > 0) {
-
+    console.log(req.files)
+    if (req.files?.length > 0) {
+        console.log("req file >0")
         productPictures = req.files.map((file) => {
             return { img: file.path };
         });
     }
+    console.log(productPictures)
     const store = await Store.findOne({ owner: req.user._id }).exec();
     if (store) {
-        console.log("Store Found")
         const productObj = {
             name,
             slug: `${slugify(req.body.name)}-${shortid.generate()}`,
@@ -37,6 +36,7 @@ exports.createProduct = async (req, res, next) => {
         };
         const product = new Product(productObj);
         product.save((error, product) => {
+            console.log(error)
             if (error) return res.status(400).json({ error });
             if (product) {
                 store.products.push(product._id)
@@ -137,7 +137,7 @@ exports.getProductsByCategory = async (req, res, next) => {
 exports.updateProductById = async (req, res, next) => {
     const productId = req.params.productId;
     const product = await Product.findOne({ _id: productId })
-    const { name, price, desc, category, quantity, status, } = req.body;
+    const { name, price, desc, category, quantity, status } = req.body;
 
     const categoryId = await Category.findOne({ type: category }).select("_id").exec();
 
@@ -174,7 +174,6 @@ exports.deleteProductById = async (req, res, next) => {
         console.log(product)
 
         if (product) {
-            console.log("here")
             Product.findByIdAndDelete(productId).exec()
             return res.status(202).json({ success: true, data: "product successfully deleted" })
         } return next(new ErrorResponse(`product with id ${productId} counldn't be found`, 400))
